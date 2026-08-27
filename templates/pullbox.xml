@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Container version="2">
+  <Name>Pullbox</Name>
+  <Repository>ghcr.io/pullboxapp/pullbox:latest</Repository>
+  <Registry>https://github.com/pullboxapp/pullbox/pkgs/container/pullbox</Registry>
+  <Network>bridge</Network>
+  <Shell>none</Shell>
+  <Privileged>false</Privileged>
+
+  <Icon>https://raw.githubusercontent.com/pullboxapp/unraid-templates/main/icon.png</Icon>
+  <WebUI>http://[IP]:[PORT:8585]/</WebUI>
+
+  <Overview>Pullbox is a self-hosted comic library manager and acquisition application. Monitor series, search configured indexers and direct sources, send selected releases to supported download clients, import an existing folder or Mylar3 library, read comics in the browser, and browse current and upcoming releases.&#xD;
+&#xD;
+IMPORTANT: Pullbox's hardened image runs as the fixed non-root UID/GID 65532:65532 and does not use PUID or PGID. Before first start, make every mounted path readable by UID 65532 and make the paths Pullbox manages writable by it. Follow the permissions guide at https://pullbox.app/docs/getting-started/nas-and-unraid-permissions before starting the container. Unraid's New Permissions and Docker Safe New Perms tools can remove this access, so reapply it afterward if those tools touch a Pullbox path.&#xD;
+&#xD;
+Keep /data on durable appdata storage backed by a cache pool; it contains config.xml, the SQLite database, logs, backups, and temporary state. First start opens Pullbox's account-setup flow.&#xD;
+&#xD;
+If you plan to install the optional direct-download providers, create a user-defined Docker network named pullbox and select it as Network Type for all Pullbox containers. Bridge networking remains supported when each provider publishes a distinct fallback port.</Overview>
+
+  <Support>https://github.com/pullboxapp/pullbox/issues</Support>
+  <Project>https://pullbox.app</Project>
+  <TemplateURL>https://raw.githubusercontent.com/pullboxapp/unraid-templates/main/templates/pullbox.xml</TemplateURL>
+  <ReadMe>https://pullbox.app/docs/getting-started/installation</ReadMe>
+  <Discord>https://discord.gg/mg6GQkATaA</Discord>
+
+  <Category>MediaApp:Books MediaServer:Books Downloaders:</Category>
+  <ExtraSearchTerms>comic comics comicbook comicbooks cbz cbr reader library mylar mylar3 usenet nzb torrent indexer prowlarr</ExtraSearchTerms>
+  <Requires>One-time host permission setup for fixed UID/GID 65532:65532 on mounted paths. See https://pullbox.app/docs/getting-started/nas-and-unraid-permissions</Requires>
+  <Changes>Initial Pullbox Community Applications template.</Changes>
+  <Date>2026-08-27</Date>
+  <License>GPL-3.0-or-later</License>
+
+  <Screenshot>https://pullbox.app/screenshots/pulllist-management.webp</Screenshot>
+  <Screenshot>https://pullbox.app/screenshots/whats-new.webp</Screenshot>
+  <Screenshot>https://pullbox.app/media/docs/reader-desktop.webp</Screenshot>
+
+  <Config Name="WebUI Port" Target="8585" Default="8585" Mode="tcp" Description="Host port for the Pullbox web interface." Type="Port" Display="always" Required="true" Mask="false">8585</Config>
+  <Config Name="Data (appdata)" Target="/data" Default="/mnt/user/appdata/pullbox" Mode="rw" Description="Durable Pullbox state: config.xml, database, logs, backups, and temporary files. Configure the appdata share to use a cache pool. The path must be writable by UID 65532." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/pullbox</Config>
+  <Config Name="Comics Library" Target="/comics" Default="" Mode="rw" Description="Comic library root managed by Pullbox. The selected host path must be readable and writable by UID 65532." Type="Path" Display="always" Required="true" Mask="false"/>
+  <Config Name="Downloads" Target="/downloads" Default="" Mode="rw" Description="Completed downloads shared with download clients. Use the same container-visible path reported by the client, or configure a remote path mapping in Pullbox. UID 65532 needs read/write access." Type="Path" Display="always" Required="true" Mask="false"/>
+  <Config Name="Imports" Target="/imports" Default="" Mode="rw" Description="Optional folder and Mylar3 database sources for the import wizard. Read access is required; write access is needed only when Pullbox should move or clean up source files." Type="Path" Display="always" Required="false" Mask="false"/>
+  <Config Name="Time Zone" Target="TZ" Default="America/New_York" Mode="" Description="IANA time zone used for schedules and logs, for example America/Los_Angeles." Type="Variable" Display="always" Required="true" Mask="false">America/New_York</Config>
+
+  <Config Name="Database URL" Target="PULLBOX_DB_URL" Default="sqlite+aiosqlite:////data/pullbox.db" Mode="" Description="SQLAlchemy database URL. Keep the default SQLite database under /data unless intentionally using PostgreSQL." Type="Variable" Display="advanced" Required="false" Mask="false">sqlite+aiosqlite:////data/pullbox.db</Config>
+  <Config Name="SQLite Journal Mode" Target="PULLBOX_SQLITE_JOURNAL_MODE" Default="WAL" Mode="" Description="SQLite journal mode. WAL is the supported Docker default." Type="Variable" Display="advanced" Required="false" Mask="false">WAL</Config>
+  <Config Name="Library Root" Target="PULLBOX_LIBRARY_ROOT" Default="/comics" Mode="" Description="Library path inside the container. Keep this aligned with the Comics Library mapping." Type="Variable" Display="advanced" Required="false" Mask="false">/comics</Config>
+  <Config Name="Covers Directory" Target="PULLBOX_COVERS_DIR" Default="/comics/.covers" Mode="" Description="Cover cache path inside the container." Type="Variable" Display="advanced" Required="false" Mask="false">/comics/.covers</Config>
+  <Config Name="Embedded Reader" Target="PULLBOX_READER_ENABLED" Default="true" Mode="" Description="Set to false to disable the embedded reader without deleting comics or saved reading progress." Type="Variable" Display="advanced" Required="false" Mask="false">true</Config>
+</Container>
