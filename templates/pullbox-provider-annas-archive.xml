@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Container version="2">
+  <Name>Pullbox-Provider-Annas-Archive</Name>
+  <Repository>ghcr.io/pullboxapp/pullbox-provider-annas-archive:latest</Repository>
+  <Registry>https://github.com/pullboxapp/pullbox-direct-providers/pkgs/container/pullbox-provider-annas-archive</Registry>
+  <Network>bridge</Network>
+  <Shell>none</Shell>
+  <Privileged>false</Privileged>
+
+  <Icon>https://raw.githubusercontent.com/pullboxapp/unraid-templates/main/icon.png</Icon>
+  <Overview>Optional official Anna's Archive direct-download provider for Pullbox. It searches eligible metadata and resolves member fast-download links; Pullbox remains responsible for matching, downloads, validation, post-processing, history, quota reserves, and library state.&#xD;
+&#xD;
+RECOMMENDED NETWORK: Create a user-defined Docker network named pullbox and select it as Network Type for this container and Pullbox. Leave Fallback API Port blank and register http://Pullbox-Provider-Annas-Archive:8780 in Pullbox.&#xD;
+&#xD;
+BRIDGE FALLBACK: If a shared custom network is not used, set Fallback API Port to an unused host port such as 8781 and register the Unraid server's private LAN address, such as http://192.168.1.20:8781. Never expose this API to the internet.&#xD;
+&#xD;
+Generate a unique token of at least 32 characters. Enter the same token here and in Pullbox Settings - Direct Downloads. Configure the official source URL and optional member fast-download secret inside Pullbox after registration; do not add the member secret to this container.</Overview>
+
+  <Support>https://github.com/pullboxapp/pullbox-direct-providers/issues</Support>
+  <Project>https://github.com/pullboxapp/pullbox-direct-providers</Project>
+  <TemplateURL>https://raw.githubusercontent.com/pullboxapp/unraid-templates/main/templates/pullbox-provider-annas-archive.xml</TemplateURL>
+  <ReadMe>https://pullbox.app/docs/configuration/direct-downloads</ReadMe>
+  <Discord>https://discord.gg/mg6GQkATaA</Discord>
+
+  <Category>Downloaders:</Category>
+  <ExtraSearchTerms>pullbox comic comics direct download annas archive provider</ExtraSearchTerms>
+  <Requires>A running Pullbox instance, a unique bearer token of at least 32 characters, and either a shared private Docker network or a private fallback host port. Member fast downloads require a user-owned Anna's Archive membership secret configured in Pullbox.</Requires>
+  <Changes>Initial Pullbox Anna's Archive provider Community Applications template.</Changes>
+  <Date>2026-08-27</Date>
+  <License>GPL-3.0-or-later</License>
+
+  <ExtraParams>--user=65532:65532 --read-only --cap-drop=ALL --security-opt=no-new-privileges --tmpfs=/tmp:rw,noexec,nosuid,size=16m</ExtraParams>
+
+  <Config Name="Provider Bearer Token" Target="PULLBOX_PROVIDER_TOKEN" Default="" Mode="" Description="Unique secret shared only with this provider registration in Pullbox. Generate at least 32 characters, for example with: openssl rand -hex 32" Type="Variable" Display="always" Required="true" Mask="true"/>
+  <Config Name="Fallback API Port" Target="8780" Default="" Mode="tcp" Description="Optional bridge-network fallback. Leave blank on the recommended shared pullbox network. Otherwise enter an unused host port such as 8781 and do not expose it outside the trusted LAN." Type="Port" Display="advanced" Required="false" Mask="false"/>
+</Container>
